@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
-		authService.validateSelfOrAdmin(id);
+		authService.authenticated();
 		Optional<User> obj = repository.findById(id);
 		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 		return new UserDTO(entity);
@@ -53,5 +53,11 @@ public class UserService implements UserDetailsService {
 		}
 		logger.info("User found: " + username);
 		return user;
+	}
+
+	@Transactional(readOnly = true)
+	public UserDTO returnDataUserLoged() {
+		User user = authService.authenticated();	
+		return new UserDTO(user);
 	}
 }

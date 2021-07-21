@@ -1,10 +1,8 @@
 package com.devsuperior.movieflix.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,13 +38,12 @@ public class User implements UserDetails, Serializable {
 	private Set<Role> roles = new HashSet<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Review> reviews = new ArrayList<>();
+	private Set<Review> reviews = new HashSet<>();
 
 	public User() {
 	}
 
 	public User(Long id, String name, String email, String password) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -89,7 +86,7 @@ public class User implements UserDetails, Serializable {
 		return roles;
 	}
 
-	public List<Review> getReviews() {
+	public Set<Review> getReviews() {
 		return reviews;
 	}
 
@@ -147,12 +144,14 @@ public class User implements UserDetails, Serializable {
 	public boolean isEnabled() {
 		return true;
 	}
-	
+
 	public boolean hasRole(String roleName) {
 		for (Role role : roles) {
-			if (role.getAuthority().equals(roleName))
+			if (role.getAuthority().equals(roleName)) {
 				return true;
+			}
 		}
+
 		return false;
 	}
 }

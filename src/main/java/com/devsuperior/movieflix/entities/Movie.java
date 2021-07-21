@@ -1,9 +1,10 @@
 package com.devsuperior.movieflix.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,34 +18,39 @@ import javax.persistence.Table;
 @Table(name = "tb_movie")
 public class Movie implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
-	private String subtitle;
+	private String subTitle;
 	private Integer year;
 	private String imgUrl;
-	private String synopsis;
 	
+	@Column(columnDefinition = "TEXT")
+	private String synopsis;
+
+	@OneToMany(mappedBy = "movie")
+	private Set<Review> reviews = new HashSet<Review>();
+
 	@ManyToOne
 	@JoinColumn(name = "genre_id")
 	private Genre genre;
-	
-	@OneToMany(mappedBy = "movie")
-	private List<Review> reviews = new ArrayList<>();
-	
+
 	public Movie() {
 	}
 
-	public Movie(Long id, String title, String subtitle, Integer year, String imgUrl, String synopsis, Genre genre) {
+	public Movie(Long id, String title, String subTitle, Integer year, String imgUrl, String synopsis) {
 		this.id = id;
 		this.title = title;
-		this.subtitle = subtitle;
+		this.subTitle = subTitle;
 		this.year = year;
 		this.imgUrl = imgUrl;
 		this.synopsis = synopsis;
-		this.genre = genre;
+	}
+	
+	public Movie(Long id) {
+		this.id = id;
 	}
 
 	public Long getId() {
@@ -63,12 +69,12 @@ public class Movie implements Serializable {
 		this.title = title;
 	}
 
-	public String getSubtitle() {
-		return subtitle;
+	public String getSubTitle() {
+		return subTitle;
 	}
 
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
 	}
 
 	public Integer getYear() {
@@ -94,17 +100,17 @@ public class Movie implements Serializable {
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
 	}
-	
+
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
 	public Genre getGenre() {
 		return genre;
 	}
 
 	public void setGenre(Genre genre) {
 		this.genre = genre;
-	}
-
-	public List<Review> getReviews() {
-		return reviews;
 	}
 
 	@Override
@@ -131,4 +137,5 @@ public class Movie implements Serializable {
 			return false;
 		return true;
 	}
+
 }
